@@ -1,6 +1,4 @@
-﻿version: '3.8'
-
-services:
+﻿services:
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
@@ -45,6 +43,28 @@ services:
       - ./config/mimir.yaml:/etc/mimir.yaml
     ports:
       - "9009:9009"
+    networks:
+      - lgtm
+
+  order-service:
+    build: ./apps/order-service
+    container_name: order-service
+    ports:
+      - "5000:5000"
+    depends_on:
+      - tempo
+      - loki
+    networks:
+      - lgtm
+
+  payment-service:
+    build: ./apps/payment-service
+    container_name: payment-service
+    ports:
+      - "5001:5001"
+    depends_on:
+      - tempo
+      - loki
     networks:
       - lgtm
 
